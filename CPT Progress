@@ -1,0 +1,61 @@
+import arcade
+
+Width = 800
+Height = 600
+
+# background things
+horizontal_line_x_positions = [0, 0, 0, 0, 0, 0]
+horizontal_line_y_positions = [80, 160, 240, 320, 400, 480]
+vertical_line_x_positions = [100, 200, 300, 400, 500, 600, 700]
+vertical_line_y_positions = [0, 0, 0, 0, 0, 0, 0, 0]
+# zombie moving
+zombie_x_positions = [800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800]
+zombie_y_positions = [130, 250, 450, 230, 13, 100, 52, 340, 259, 636, 547]
+
+
+def setup():
+    arcade.open_window(Width, Height, "My Arcade Game")
+    arcade.set_background_color(arcade.color.WHITE)
+    arcade.schedule(update, 1 / 60)
+
+    window = arcade.get_window()
+    window.on_draw = on_draw
+    window.on_key_press = on_key_press
+    window.on_key_release = on_key_release
+    window.on_mouse_press = on_mouse_press
+
+    arcade.run()
+
+
+def update(delta_time):
+    for index in range(len(zombie_x_positions)):
+        zombie_x_positions[index] -= 2.5
+
+
+def on_draw():
+    arcade.start_render()
+    # background
+    arcade.draw_xywh_rectangle_filled(0, 0, 800, 480, arcade.color.GREEN)
+    for x, y in zip(horizontal_line_x_positions, horizontal_line_y_positions):
+        arcade.draw_line(x, y, x+800, y, arcade.color.BLACK)
+    for a, b in zip(vertical_line_x_positions, vertical_line_y_positions):
+        arcade.draw_line(a, b, a, b+500, arcade.color.BLACK)
+    #zombies
+    for c, d in zip(zombie_x_positions, zombie_y_positions):
+        arcade.draw_circle_filled(c, d, 30, arcade.color.BLUE)
+
+
+def on_key_press(key, modifiers):
+    pass
+
+
+def on_key_release(key, modifiers):
+    pass
+
+
+def on_mouse_press(x, y, button, modifiers):
+    pass
+
+
+if __name__ == '__main__':
+    setup()
