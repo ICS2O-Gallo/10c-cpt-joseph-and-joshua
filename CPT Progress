@@ -1,11 +1,21 @@
 import arcade
 
-Width = 800
-Height = 600
+Width = 1200
+Height = 800
+#button stuff
+BTN_X = 0
+BTN_Y = 1
+BTN_WIDTH = 2
+BTN_HEIGHT = 3
+BTN_IS_CLICKED = 4
+BTN_COLOR = 5
+BTN_CLICKED_COLOR = 6
+button1 = [200, 200, 300, 50, False, arcade.color.BLUE, arcade.color.RED]
+button2 = [200, 140, 100, 30, False, arcade.color.BLUE, arcade.color.RED]
 
 # background things
 horizontal_line_x_positions = [0, 0, 0, 0, 0, 0]
-horizontal_line_y_positions = [80, 160, 240, 320, 400, 480]
+horizontal_line_y_positions = [Height-520, Height-440, Height-360, Height-280, Height-200, Height-120]
 vertical_line_x_positions = [100, 200, 300, 400, 500, 600, 700]
 vertical_line_y_positions = [0, 0, 0, 0, 0, 0, 0, 0]
 # zombie moving
@@ -23,6 +33,7 @@ def setup():
     window.on_key_press = on_key_press
     window.on_key_release = on_key_release
     window.on_mouse_press = on_mouse_press
+    window.on_mouse_release = on_mouse_release
 
     arcade.run()
 
@@ -35,7 +46,9 @@ def update(delta_time):
 def on_draw():
     arcade.start_render()
     # background
-    arcade.draw_xywh_rectangle_filled(0, 0, 800, 480, arcade.color.GREEN)
+    draw_button(button1)
+    draw_button(button2)
+    arcade.draw_xywh_rectangle_filled(0, 0, Width, Height-120, arcade.color.GREEN)
     for x, y in zip(horizontal_line_x_positions, horizontal_line_y_positions):
         arcade.draw_line(x, y, x+800, y, arcade.color.BLACK)
     for a, b in zip(vertical_line_x_positions, vertical_line_y_positions):
@@ -54,7 +67,38 @@ def on_key_release(key, modifiers):
 
 
 def on_mouse_press(x, y, button, modifiers):
-    pass
+    print(f"Click at ({x}, {y})")
+
+    if mouse_hover(x, y, button1):
+        button1[BTN_IS_CLICKED] = True
+    if mouse_hover(x, y, button2):
+        button2[BTN_IS_CLICKED] = True
+
+def on_mouse_release(x, y, button, modifiers):
+    button1[BTN_IS_CLICKED] = False
+    button2[BTN_IS_CLICKED] = False
+
+def mouse_hover(x, y, button) -> bool:
+    if (x > button[BTN_X] and x < button[BTN_X] + button[BTN_WIDTH] and
+            y > button[BTN_Y] and y < button[BTN_Y] + button[BTN_HEIGHT]):
+        return True
+    else:
+        return False
+
+
+def draw_button(button):
+    # Select the appropriate color to draw with
+    if button[BTN_IS_CLICKED]:
+        color = button[BTN_CLICKED_COLOR]
+    else:
+        color = button[BTN_COLOR]
+
+    # Draw button1
+        arcade.draw_xywh_rectangle_filled(button[BTN_X],
+                                          button[BTN_Y],
+                                          button[BTN_WIDTH],
+                                          button[BTN_HEIGHT],
+                                          color)
 
 
 if __name__ == '__main__':
