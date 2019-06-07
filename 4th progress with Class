@@ -1,0 +1,205 @@
+import arcade
+import random
+width = 1200
+height = 800
+
+# button stuff
+BTN_X = 0
+BTN_Y = 1
+BTN_width = 2
+BTN_height = 3
+BTN_IS_CLICKED = 4
+BTN_COLOR = 5
+BTN_CLICKED_COLOR = 6
+button1 = [200, 200, 300, 50, False, arcade.color.RED, arcade.color.PURPLE]
+button2 = [200, 140, 100, 30, False, arcade.color.RED, arcade.color.BLUE]
+
+# different screens
+current_screen = "menu"
+Instruction_Button = [width - 800, height - 500, 373, 100, arcade.color.GRAY]
+Game_Button = [width - 800, height - 700, 383, 100, arcade.color.BLACK]
+
+
+# Set how many rows and columns we will have
+ROW_COUNT = 15
+COLUMN_COUNT = 15
+
+# This sets the width and height of each grid location
+width = 30
+height = 30
+
+# This sets the margin between each cell
+# and on the edges of the screen.
+MARGIN = 25
+
+# Do the math to figure out our screen dimensions
+SCREEN_width = (width + MARGIN) * COLUMN_COUNT + MARGIN
+SCREEN_height = (height + MARGIN) * ROW_COUNT + MARGIN
+SCREEN_TITLE = "Array Backed Grid Example"
+
+zombie_x_positions = [800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800]
+zombie_y_positions = [130, 250, 450, 230, 13, 100, 52, 340, 259, 636, 547]
+
+
+def draw_button(button):
+   # Select the appropriate color to draw with
+    global color
+    if button1[BTN_IS_CLICKED]:
+        color = button1[BTN_CLICKED_COLOR]
+    else:
+        color = button1[BTN_COLOR]
+
+    if button2[BTN_IS_CLICKED]:
+       color = button2[BTN_CLICKED_COLOR]
+    else:
+       color = button2[BTN_COLOR]
+    arcade.draw_xywh_rectangle_filled(button[BTN_X],
+                                     button[BTN_Y],
+                                     button[BTN_width],
+                                     button[BTN_height],
+                                     color)
+
+
+def draw_instructions(instructions):
+    arcade.draw_text("1. Collect fabric to make plants.", 200, 700, arcade.color.BLACK, font_size=15, width=0)
+    arcade.draw_text("2. Plant the pants on the yard.", 200, 600, arcade.color.BLACK, font_size=12, width=0)
+    arcade.draw_text("3. As the zombies keep coming, plant more pants.", 200, 500, arcade.color.BLACK, font_size=12,
+                         width=0)
+    arcade.draw_text("4. Repeat step 2 and 3.", 200, 400, arcade.color.BLACK, font_size=12, width=0)
+    arcade.draw_text("5. Clean it up afterwards.", 200, 300, arcade.color.BLACK, font_size=12, width=0)
+
+def mouse_hover(x, y, button) -> bool:
+    if (x > button[BTN_X] and x < button[BTN_X] + button[BTN_width] and y > button[BTN_Y]
+        and y < button[BTN_Y] + button[BTN_height]):
+        return True
+    else:
+            return False
+
+
+class MyGame(arcade.Window):
+    """
+    Main application class.
+    """
+
+    def __init__(self, width, height, title):
+        """
+        Set up the application.
+        """
+
+        super().__init__(width, height, title)
+
+        # Create a 2 dimensional array. A two dimensional
+        # array is simply a list of lists.
+        self.grid = []
+        for row in range(ROW_COUNT):
+            # Add an empty array that will hold each cell
+            # in this row
+            self.grid.append([])
+            for column in range(COLUMN_COUNT):
+                self.grid[row].append(0)  # Append a cell
+
+        arcade.set_background_color(arcade.color.BLACK)
+
+    def update(self, delta_time: float):
+        for index in range(len(zombie_x_positions)):
+            zombie_x_positions[index] -= 2.5
+
+    def on_draw(self):
+        """
+        Render the screen.
+        """
+        arcade.start_render()
+        # menu
+        if current_screen == "menu":
+            arcade.set_background_color(arcade.color.GREEN)
+            arcade.draw_text("Pants VS Zombies", width / 2, height - 100, arcade.color.BLACK, font_size=30,
+                             anchor_x="center")
+            draw_button(Instruction_Button)
+            draw_button(Game_Button)
+            arcade.draw_text("Instructions", width - 525, height - 450, arcade.color.BLACK, font_size=30,
+                             anchor_x="center")
+            arcade.draw_text("Play", width - 600, height - 700, arcade.color.BLACK, font_size=30, anchor_x="center")
+        # instructions
+        if current_screen == "Instructions":
+            arcade.set_background_color(arcade.color.GRAY)
+            arcade.draw_text("Instructions", width / 2, height - 100, arcade.color.BLACK, font_size=30,
+                             anchor_x="center")
+            draw_instructions("instructions")
+
+        if current_screen == "Game":
+            # zombies
+            for c, d in zip(zombie_x_positions, zombie_y_positions):
+                arcade.draw_circle_filled(c, d, 30, arcade.color.BLUE)
+
+            # button
+            draw_button(button1)
+        for row in range(ROW_COUNT):
+            for column in range(COLUMN_COUNT):
+                # Figure out what color to draw the box
+                if self.grid[row][column] == 1:
+                    color = arcade.color.GREEN
+                else:
+                    color = arcade.color.WHITE
+
+        # Do the math to figure out where the box is
+        x = (MARGIN + width) * column + MARGIN + width // 2
+        y = (MARGIN + height) * row + MARGIN + height // 2
+
+        # Draw the box
+        arcade.draw_rectangle_filled(x, y, width, height, color)
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        """
+        Called when the user presses a mouse button.
+        """
+
+        # Change the x/y screen coordinates to grid coordinates
+        column = x // (width + MARGIN)
+        row = y // (height + MARGIN)
+
+        print(f"Click coordinates: ({x}, {y}). Grid coordinates: ({row}, {column})")
+
+        # Make sure we are on-grid. It is possible to click in the upper right
+        # corner in the margin and go to a grid location that doesn't exist
+        if row < ROW_COUNT and column < COLUMN_COUNT:
+
+            # Flip the location between 1 and 0.
+            if self.grid[row][column] == 0:
+                self.grid[row][column] = 1
+            else:
+                self.grid[row][column] = 0
+        print(f"Click at ({x}, {y})")
+        global current_screen
+
+        if mouse_hover(x, y, button1):
+            button1[BTN_IS_CLICKED] = True
+        if mouse_hover(x, y, button2):
+            button2[BTN_IS_CLICKED] = True
+
+        # menu screen
+        if mouse_hover(x, y, Instruction_Button):
+            current_screen = "Instructions"
+        if mouse_hover(x, y, Game_Button):
+            current_screen = "Game"
+
+    def on_key_press(self, key: int, modifiers: int):
+        global current_screen
+        if current_screen == "Instructions":
+            if key == arcade.key.ESCAPE:
+                current_screen = "menu"
+        elif current_screen == "Game":
+            if key == arcade.key.ESCAPE:
+                current_screen = "menu"
+
+    def on_key_release(self, symbol: int, modifiers: int):
+        pass
+
+
+def main():
+
+    MyGame(SCREEN_width, SCREEN_height, SCREEN_TITLE)
+    arcade.run()
+
+
+if __name__ == "__main__":
+    main()
