@@ -1,0 +1,70 @@
+from arcade import *
+
+SC_WIDTH = 800
+SC_HEIGHT = 800
+SC_TITLE = "Checkers"
+
+grid_col_1 = color.GREEN
+grid_col_2 = color.DARK_GREEN
+
+gridGenerator = [100 * k for k in range(0, 9)]
+
+mousePos = [0, 0]
+piecePos = [50, 50]
+selected = -1
+
+
+def update(delta_time):
+    start_render()
+    setup_grid(grid_col_1, grid_col_2)
+    draw_piece()
+
+def setup_grid(color_1, color_2):
+    def row(y_val):
+        for x in gridGenerator:
+            if y_val % 200 == 0:
+                if x % 200 == 0:
+                    draw_rectangle_filled(x, y_val, 200, 200, color_1)
+
+                else:
+                    draw_rectangle_filled(x, y_val, 200, 200, color_2)
+
+            else:
+                if x % 200 == 0:
+                    draw_rectangle_filled(x + 100, y_val, 200, 200,
+                                          color_1)
+
+                else:
+                    draw_rectangle_filled(x + 100, y_val, 200, 200,
+                                          color_2)
+
+    for y in gridGenerator:
+        row(y)
+
+
+def custom_round(x, base=50):
+    return base * round(x / base)
+
+
+def draw_piece():
+ pass
+
+
+def mouse_press(x, y, button, mod):
+  pass
+
+
+def mouse_motion(x, y, dx, dy):
+    pass
+
+
+def setup():
+    open_window(SC_WIDTH, SC_HEIGHT, SC_TITLE)
+    schedule(update, 1 / 60)
+    window = get_window()
+    window.on_mouse_press = mouse_press
+    window.on_mouse_motion = mouse_motion
+    run()
+
+
+setup()
