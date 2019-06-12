@@ -1,4 +1,5 @@
 import arcade
+import random
 
 Width = 1200
 Height = 800
@@ -12,14 +13,21 @@ BTN_IS_CLICKED = 4
 BTN_COLOR = 5
 BTN_CLICKED_COLOR = 6
 
-# different screens
+# current screens
 current_screen = "menu"
-Instruction_Button = [Width - 800, Height - 500, 373, 100, False, arcade.color.GRAY, arcade.color.RED]
-Game_Button = [Width - 800, Height - 700, 383, 100, False, arcade.color.BLUE, arcade.color.GREEN]
+instruction_button = [Width - 800, Height - 500, 373, 100, False,
+                      arcade.color.GRAY, arcade.color.RED]
+game_button = [Width - 800, Height - 700, 383, 100,
+               False, arcade.color.BLUE, arcade.color.GREEN]
+
+# buttons
+button_1 = [Width - 1000, Height - 100, 100, 100, False, arcade.color.BLUE, arcade.color.RED]
 
 # zombie moving
-zombie_x_positions = [800, 800, 800, 800, 800, 800, 800, 800, 800, 800, 800]
-zombie_y_positions = [130, 250, 450, 230, 13, 100, 52, 340, 259, 636, 547]
+zombie_x_positions = [1200, 1200, 1200, 1200, 1200, 1200, 1200,
+                      1200, 1200, 1200, 1200]
+zombie_y_positions = [130, 250, 450, 230, 13, 100,
+                      52, 340, 259, 636, 547]
 
 
 def setup():
@@ -38,7 +46,12 @@ def setup():
 
 
 def update(delta_time):
-    pass
+    for index in range(len(zombie_x_positions)):
+        zombie_x_positions[index] -= 15
+
+    if zombie_x_positions[index] <= 0:
+        zombie_x_positions[index] = random.randrange(Width, Width + 150)
+        zombie_x_positions[index] = random.randrange(0, Height - 100)
 
 
 def on_draw():
@@ -47,10 +60,10 @@ def on_draw():
     # menu
     if current_screen == "menu":
         arcade.set_background_color(arcade.color.GREEN)
-        arcade.draw_text("Pants VS Zombies", Width / 2, Height - 100, arcade.color.BLACK, font_size=30,
+        arcade.draw_text("Pants VS Zombies", Width / 2, Height
+                         - 100, arcade.color.BLACK, font_size=30,
                          anchor_x="center")
-        draw_button(Instruction_Button)
-        draw_button(Game_Button)
+
         arcade.draw_text("Instructions", Width - 525, Height - 450, arcade.color.BLACK, font_size=30, anchor_x="center")
         arcade.draw_text("Play", Width - 600, Height - 700, arcade.color.BLACK, font_size=30, anchor_x="center")
     # instructions
@@ -64,12 +77,17 @@ def on_draw():
         # zombies
         for c, d in zip(zombie_x_positions, zombie_y_positions):
             arcade.draw_circle_filled(c, d, 30, arcade.color.BLUE)
-
-        # button
+        draw_button(button_1)
 
 
 def on_key_press(key, modifiers):
     global current_screen
+    if current_screen == "menu":
+        if key == arcade.key.I:
+            current_screen = "Instructions"
+        elif key == arcade.key.P:
+            current_screen = "Game"
+
     if current_screen == "Instructions":
         if key == arcade.key.ESCAPE:
             current_screen = "menu"
@@ -87,16 +105,16 @@ def on_mouse_press(x, y, button, modifiers):
     global current_screen
 
     # menu screen
-    if mouse_hover(x, y, Instruction_Button):
-        Instruction_Button[BTN_IS_CLICKED] = True
-    if mouse_hover(x, y, Game_Button):
-        Game_Button[BTN_IS_CLICKED] = True
+    # menu screen
+    if mouse_hover(x, y, instruction_button):
+        instruction_button[BTN_IS_CLICKED] = True
+    if mouse_hover(x, y, game_button):
+        game_button[BTN_IS_CLICKED] = True
 
 
 def on_mouse_release(x, y, button, modifiers):
-    Instruction_Button[BTN_IS_CLICKED] = False
-    Game_Button[BTN_IS_CLICKED] = False
-
+    instruction_button[BTN_IS_CLICKED] = False
+    game_button[BTN_IS_CLICKED] = False
 
 def mouse_hover(x, y, button) -> bool:
     if (x > button[BTN_X] and x < button[BTN_X] + button[BTN_WIDTH] and y > button[BTN_Y]
@@ -109,11 +127,12 @@ def mouse_hover(x, y, button) -> bool:
 def draw_button(button):
     global colour
     # Select the appropriate color to draw with
-    if Instruction_Button[BTN_IS_CLICKED]:
+    if instruction_button[BTN_IS_CLICKED]:
         colour = [BTN_CLICKED_COLOR]
     else:
         colour = [BTN_COLOR]
-    if Game_Button[BTN_IS_CLICKED]:
+
+    if game_button[BTN_IS_CLICKED]:
         colour = [BTN_CLICKED_COLOR]
     else:
         colour = [BTN_COLOR]
