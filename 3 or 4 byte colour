@@ -11,14 +11,14 @@ BTN_WIDTH = 2
 BTN_HEIGHT = 3
 BTN_IS_CLICKED = 4
 BTN_COLOR = 5
-BTN_CLICKED_COLOR = 6
+BTN_CLICKED_COLOUR = 6
 
 # current screens
 current_screen = "menu"
 instruction_button = [Width - 800, Height - 500, 373, 100, False,
-                      arcade.color.GRAY, arcade.color.RED]
+                      arcade.color.GRAY]
 game_button = [Width - 800, Height - 700, 383, 100,
-               False, arcade.color.BLUE, arcade.color.GREEN]
+               False, arcade.color.BLUE]
 
 # buttons
 button_1 = [Width - 1000, Height - 100, 100, 100, False, arcade.color.BLUE, arcade.color.RED]
@@ -63,7 +63,8 @@ def on_draw():
         arcade.draw_text("Pants VS Zombies", Width / 2, Height
                          - 100, arcade.color.BLACK, font_size=30,
                          anchor_x="center")
-
+        draw_button(instruction_button)
+        draw_game_button(game_button)
         arcade.draw_text("Instructions", Width - 525, Height - 450, arcade.color.BLACK, font_size=30, anchor_x="center")
         arcade.draw_text("Play", Width - 600, Height - 700, arcade.color.BLACK, font_size=30, anchor_x="center")
     # instructions
@@ -82,11 +83,6 @@ def on_draw():
 
 def on_key_press(key, modifiers):
     global current_screen
-    if current_screen == "menu":
-        if key == arcade.key.I:
-            current_screen = "Instructions"
-        elif key == arcade.key.P:
-            current_screen = "Game"
 
     if current_screen == "Instructions":
         if key == arcade.key.ESCAPE:
@@ -105,16 +101,28 @@ def on_mouse_press(x, y, button, modifiers):
     global current_screen
 
     # menu screen
-    # menu screen
     if mouse_hover(x, y, instruction_button):
         instruction_button[BTN_IS_CLICKED] = True
-    if mouse_hover(x, y, game_button):
-        game_button[BTN_IS_CLICKED] = True
+        current_screen = "Instructions"
 
+    elif mouse_hover(x, y, game_button):
+        game_button[BTN_IS_CLICKED] = True
+        current_screen = "Game"
+
+    # game screen
+    elif mouse_hover(x, y, button_1):
+        button_1[BTN_IS_CLICKED] = True
+
+
+def mouse_drag(x, y, button, modifiers):
+    if on_mouse_press(x, y, button_1, modifiers):
+    
 
 def on_mouse_release(x, y, button, modifiers):
     instruction_button[BTN_IS_CLICKED] = False
     game_button[BTN_IS_CLICKED] = False
+    button_1[BTN_IS_CLICKED] = False
+
 
 def mouse_hover(x, y, button) -> bool:
     if (x > button[BTN_X] and x < button[BTN_X] + button[BTN_WIDTH] and y > button[BTN_Y]
@@ -124,23 +132,32 @@ def mouse_hover(x, y, button) -> bool:
         return False
 
 
-def draw_button(button):
-    global colour
-    # Select the appropriate color to draw with
-    if instruction_button[BTN_IS_CLICKED]:
-        colour = [BTN_CLICKED_COLOR]
-    else:
-        colour = [BTN_COLOR]
+def draw_button(button_1):
+    arcade.draw_xywh_rectangle_filled(button_1[BTN_X],
+                                      button_1[BTN_Y],
+                                      button_1[BTN_WIDTH],
+                                      button_1[BTN_HEIGHT],
+                                      button_1[BTN_COLOR])
 
-    if game_button[BTN_IS_CLICKED]:
-        colour = [BTN_CLICKED_COLOR]
+
+def draw_instruction_button(instruction_button):
+    arcade.draw_xywh_rectangle_filled(instruction_button[BTN_X],
+                                      instruction_button[BTN_Y],
+                                      instruction_button[BTN_WIDTH],
+                                      instruction_button[BTN_HEIGHT],
+                                      instruction_button[BTN_COLOR])
+
+
+def draw_game_button(game_button):
+    if button_1[BTN_IS_CLICKED]:
+        color = [BTN_CLICKED_COLOUR]
     else:
-        colour = [BTN_COLOR]
-    arcade.draw_xywh_rectangle_filled(button[BTN_X],
-                                      button[BTN_Y],
-                                      button[BTN_WIDTH],
-                                      button[BTN_HEIGHT],
-                                      colour)
+        color = [BTN_COLOR]
+    arcade.draw_xywh_rectangle_filled(game_button[BTN_X],
+                                      game_button[BTN_Y],
+                                      game_button[BTN_WIDTH],
+                                      game_button[BTN_HEIGHT],
+                                      game_button[BTN_COLOR])
 
 
 def draw_instructions(instructions):
