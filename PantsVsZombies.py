@@ -78,7 +78,7 @@ class Fabric(arcade.Sprite):
 
 
 class Zombie(arcade.Sprite):
-    def __init__(self, row, speed=5, health=10):
+    def __init__(self, row, speed=2, health=10):
         center_x = 1050
         center_y = [50, 150, 250, 350, 450, 550, 650][row]
         super().__init__('.\\assets\\red_circle.png', center_x=center_x,
