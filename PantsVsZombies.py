@@ -432,8 +432,6 @@ def draw_instructions(instructions):
                      200, 440, arcade.color.BLACK, font_size=15)
     arcade.draw_text("4. Repeat step 2 and 3.", 200, 360,
                      arcade.color.BLACK, font_size=15)
-    arcade.draw_text("5. Clean it up afterwards.", 200,
-                     280, arcade.color.BLACK, font_size=15)
 
 
 if __name__ == '__main__':
