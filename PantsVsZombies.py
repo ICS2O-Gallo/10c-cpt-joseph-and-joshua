@@ -47,8 +47,10 @@ fabric = 50
 # 1: pant
 mouse_select = 0
 
-instruction_button = [(WIDTH - 190) / 2, HEIGHT - 560, 190, 50, arcade.color.GRAY, arcade.color.RED]
-game_button = [(WIDTH - 190) / 2, HEIGHT - 710, 190, 50, arcade.color.BLACK, arcade.color.BLUE]
+instruction_button = [(WIDTH - 190) / 2, HEIGHT - 560,
+                      190, 50, arcade.color.GRAY, arcade.color.RED]
+game_button = [(WIDTH - 190) / 2, HEIGHT - 710, 190, 50,
+               arcade.color.BLACK, arcade.color.BLUE]
 
 # grid
 grid_col_1 = arcade.color.GREEN
@@ -63,9 +65,11 @@ selected = -1
 class Fabric(arcade.Sprite):
     def __init__(self, start_x=None, start_y=None):
         if (start_x is not None) and (start_y is not None):
-            super().__init__('.\\assets\\fabric.png', scale=3, center_x=start_x, center_y=start_y)
+            super().__init__('.\\assets\\fabric.png', scale=3,
+                             center_x=start_x, center_y=start_y)
         else:
-            super().__init__('.\\assets\\fabric.png', scale=3, center_x=random.randrange(WIDTH), center_y=HEIGHT)
+            super().__init__('.\\assets\\fabric.png', scale=3,
+                             center_x=random.randrange(WIDTH), center_y=HEIGHT)
 
     def update(self):
         self.center_y -= 5
@@ -77,7 +81,8 @@ class Zombie(arcade.Sprite):
     def __init__(self, row, speed=5, health=10):
         center_x = 1050
         center_y = [50, 150, 250, 350, 450, 550, 650][row]
-        super().__init__('.\\assets\\red_circle.png', center_x=center_x, center_y=center_y)
+        super().__init__('.\\assets\\red_circle.png', center_x=center_x,
+                         center_y=center_y)
         self.health = health
         self.speed = speed
 
@@ -112,7 +117,7 @@ def level_generator(tick):
         return []
     if tick % 35 == 0:
         random_number = random.random()
-        for i in range(7, 0, -1):
+        for i in range(7, 1, -1):
             if random_number < ((1/2) ** (i - tick/200)):
                 return random.sample(set(range(7)), i)
         return [random.choice(range(7))]
@@ -171,18 +176,23 @@ def on_draw():
     # menu
     if current_screen == 0:
         arcade.set_background_color(arcade.color.GREEN)
-        arcade.draw_text("Pants VS Zombies", WIDTH / 2, HEIGHT - 100, arcade.color.BLACK, font_size=30, anchor_x="center")
+        arcade.draw_text("Pants VS Zombies", WIDTH / 2, HEIGHT - 100,
+                         arcade.color.BLACK, font_size=30, anchor_x="center")
         draw_instruction_button(instruction_button)
         draw_game_button(game_button)
-        arcade.draw_text("Instructions", WIDTH / 2, HEIGHT - 550, arcade.color.BLACK, font_size=30, anchor_x="center")
-        arcade.draw_text("Play", WIDTH / 2, HEIGHT - 700, arcade.color.BLACK, font_size=30, anchor_x="center")
+        arcade.draw_text("Instructions", WIDTH / 2, HEIGHT - 550,
+                         arcade.color.BLACK, font_size=30, anchor_x="center")
+        arcade.draw_text("Play", WIDTH / 2, HEIGHT - 700,
+                         arcade.color.BLACK, font_size=30, anchor_x="center")
 
     # instructions
     elif current_screen == 1:
         arcade.set_background_color(arcade.color.GRAY)
-        arcade.draw_text("Instructions", WIDTH / 2, HEIGHT - 100, arcade.color.BLACK, font_size=30, anchor_x="center")
+        arcade.draw_text("Instructions", WIDTH / 2, HEIGHT - 100,
+                         arcade.color.BLACK, font_size=30, anchor_x="center")
         draw_instructions("instructions")
-        arcade.draw_text("Esc to go to Menu", WIDTH - 1000, HEIGHT - 700, arcade.color.BLACK, font_size=30, anchor_x="center")
+        arcade.draw_text("Esc to go to Menu", WIDTH - 1000, HEIGHT - 700,
+                         arcade.color.BLACK, font_size=30, anchor_x="center")
         
     # game
     elif current_screen == 2:
@@ -191,19 +201,33 @@ def on_draw():
             zombie_sprites.append(Zombie(i))
         setup_grid(grid_col_1, grid_col_2)
         for i in gridGenerator[:-1]:
-            arcade.draw_rectangle_filled(i + 50, HEIGHT - 50, 100, 100, arcade.color.BLACK_BEAN)
-            arcade.draw_rectangle_filled(i + 50, HEIGHT - 50, 90, 90, arcade.color.ALLOY_ORANGE)
+            arcade.draw_rectangle_filled(
+                i + 50, HEIGHT - 50, 100, 100, arcade.color.BLACK_BEAN)
+            arcade.draw_rectangle_filled(
+                i + 50, HEIGHT - 50, 90, 90, arcade.color.ALLOY_ORANGE)
 
-        arcade.draw_texture_rectangle(150, HEIGHT - 50, 100, 100, arcade.load_texture('.\\assets\\diamond.png'))
-        arcade.draw_texture_rectangle(250, HEIGHT - 50, 100, 100, arcade.load_texture('.\\assets\\gold.png'))
-        arcade.draw_texture_rectangle(350, HEIGHT - 50, 100, 100, arcade.load_texture('.\\assets\\leather.png'))
+        arcade.draw_texture_rectangle(
+            150, HEIGHT - 50, 100, 100,
+            arcade.load_texture('.\\assets\\diamond.png'))
+        arcade.draw_texture_rectangle(
+            250, HEIGHT - 50, 100, 100,
+            arcade.load_texture('.\\assets\\gold.png'))
+        arcade.draw_texture_rectangle(
+            350, HEIGHT - 50, 100, 100,
+            arcade.load_texture('.\\assets\\leather.png'))
         global mouse_select, send_fabric_error
         if mouse_select == 1:
-            arcade.draw_rectangle_outline(150, HEIGHT - 50, 90, 90, color=arcade.color.RED, border_width=5)
+            arcade.draw_rectangle_outline(
+                150, HEIGHT - 50, 90, 90,
+                color=arcade.color.RED, border_width=5)
         elif mouse_select == 2:
-            arcade.draw_rectangle_outline(250, HEIGHT - 50, 90, 90, color=arcade.color.RED, border_width=5)
+            arcade.draw_rectangle_outline(
+                250, HEIGHT - 50, 90, 90,
+                color=arcade.color.RED, border_width=5)
         elif mouse_select == 3:
-            arcade.draw_rectangle_outline(350, HEIGHT - 50, 90, 90, color=arcade.color.RED, border_width=5)
+            arcade.draw_rectangle_outline(
+                350, HEIGHT - 50, 90, 90,
+                color=arcade.color.RED, border_width=5)
         grid_counter = -1
         for row in grid:
             grid_counter += 1
@@ -211,20 +235,34 @@ def on_draw():
             for col in row:
                 row_counter += 1
                 if col == 1:
-                    arcade.draw_texture_rectangle((100 * grid_counter) + 50, (100 * row_counter) + 50, 100, 100, arcade.load_texture('.\\assets\\diamond.png'))
+                    arcade.draw_texture_rectangle(
+                        (100 * grid_counter) + 50, (100 * row_counter) + 50, 100, 100,
+                        arcade.load_texture('.\\assets\\diamond.png'))
                     if tick_counter % 5 == 0:
-                        pant_projectile = arcade.Sprite(".\\assets\\pant_projectile.png", center_x=(100 * grid_counter) + 50, center_y=(100 * row_counter) + 50)
+                        pant_projectile = arcade.Sprite(
+                            ".\\assets\\pant_projectile.png",
+                            center_x=(100 * grid_counter) + 50,
+                            center_y=(100 * row_counter) + 50)
                         pant_sprites.append(pant_projectile)
                 elif col == 2:
-                    arcade.draw_texture_rectangle((100 * grid_counter) + 50, (100 * row_counter) + 50, 100, 100, arcade.load_texture('.\\assets\\gold.png'))
+                    arcade.draw_texture_rectangle(
+                        (100 * grid_counter) + 50, (100 * row_counter) + 50, 100, 100,
+                        arcade.load_texture('.\\assets\\gold.png'))
                     if random.randint(0, 45) == 1:
-                        fabric_sprites.append(Fabric((100 * grid_counter) + 50, (100 * row_counter) + 50))
+                        fabric_sprites.append(
+                            Fabric((100 * grid_counter) + 50, (100 * row_counter) + 50))
                 elif col >= 35:
-                    arcade.draw_texture_rectangle((100 * grid_counter) + 50, (100 * row_counter) + 50, 100, 100, arcade.load_texture('.\\assets\\leather.png'))
+                    arcade.draw_texture_rectangle(
+                        (100 * grid_counter) + 50, (100 * row_counter) + 50, 100, 100,
+                        arcade.load_texture('.\\assets\\leather.png'))
                     if tick_counter % 2 == 1:
-                        arcade.draw_circle_filled((100 * grid_counter) + 50, (100 * row_counter) + 80, 5, arcade.color.RED)
+                        arcade.draw_circle_filled(
+                            (100 * grid_counter) + 50, (100 * row_counter) + 80, 5,
+                            arcade.color.RED)
                 elif col >= 3:
-                    arcade.draw_texture_rectangle((100 * grid_counter) + 50, (100 * row_counter) + 50, 100, 100, arcade.load_texture('.\\assets\\leather.png'))
+                    arcade.draw_texture_rectangle(
+                        (100 * grid_counter) + 50, (100 * row_counter) + 50, 100, 100,
+                        arcade.load_texture('.\\assets\\leather.png'))
                     grid[grid_counter][row_counter] += 1
         pant_sprites.move(30, 0)
         pant_sprites.draw()
@@ -279,6 +317,7 @@ def square_round(number):
 
 
 def board_action(x, y):
+    global mouse_select, fabric, cost, grid, send_fabric_error, cost_gold, cost_leather, cost_pant
     round_x = square_round(x)
     round_y = square_round(y)
     if (mouse_select == 1) and (grid[round_x][round_y] == 0):
@@ -385,11 +424,16 @@ def draw_game_button(game_button):
 
 
 def draw_instructions(instructions):
-    arcade.draw_text("1. Collect fabric to make pants.", 200, 600, arcade.color.BLACK, font_size=15)
-    arcade.draw_text("2. Plant the pants on the yard.", 200, 520, arcade.color.BLACK, font_size=15)
-    arcade.draw_text("3. As the zombies keep coming, plant more pants.", 200, 440, arcade.color.BLACK, font_size=15)
-    arcade.draw_text("4. Repeat step 2 and 3.", 200, 360, arcade.color.BLACK, font_size=15)
-    arcade.draw_text("5. Clean it up afterwards.", 200, 280, arcade.color.BLACK, font_size=15)
+    arcade.draw_text("1. Collect fabric to make pants.", 200,
+                     600, arcade.color.BLACK, font_size=15)
+    arcade.draw_text("2. Plant the pants on the yard.", 200,
+                     520, arcade.color.BLACK, font_size=15)
+    arcade.draw_text("3. As the zombies keep coming, plant more pants.",
+                     200, 440, arcade.color.BLACK, font_size=15)
+    arcade.draw_text("4. Repeat step 2 and 3.", 200, 360,
+                     arcade.color.BLACK, font_size=15)
+    arcade.draw_text("5. Clean it up afterwards.", 200,
+                     280, arcade.color.BLACK, font_size=15)
 
 
 if __name__ == '__main__':
