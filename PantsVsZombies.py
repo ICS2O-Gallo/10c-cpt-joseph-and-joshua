@@ -161,8 +161,8 @@ def update(delta_time):
         for _fabric in hit_list:
             _fabric.kill()
             fabric += 25
-        if (len(fabric_sprites)) >= 250:
-            fabric_sprites[0].kill()
+        if (len(pant_sprites)) >= 250:
+            pant_sprites[0].kill()
 
 
 def on_draw():
@@ -186,7 +186,6 @@ def on_draw():
         
     # game
     elif current_screen == 2:
-        print(tick_counter)
         tick_counter += 1
         for i in level_generator(tick_counter):
             zombie_sprites.append(Zombie(i))
@@ -216,17 +215,14 @@ def on_draw():
                     if tick_counter % 5 == 0:
                         pant_projectile = arcade.Sprite(".\\assets\\pant_projectile.png", center_x=(100 * grid_counter) + 50, center_y=(100 * row_counter) + 50)
                         pant_sprites.append(pant_projectile)
-                        print("Hit")
                 elif col == 2:
                     arcade.draw_texture_rectangle((100 * grid_counter) + 50, (100 * row_counter) + 50, 100, 100, arcade.load_texture('.\\assets\\gold.png'))
                     if random.randint(0, 45) == 1:
                         fabric_sprites.append(Fabric((100 * grid_counter) + 50, (100 * row_counter) + 50))
-                        print("Fabric generated")
                 elif col >= 35:
                     arcade.draw_texture_rectangle((100 * grid_counter) + 50, (100 * row_counter) + 50, 100, 100, arcade.load_texture('.\\assets\\leather.png'))
                     if tick_counter % 2 == 1:
                         arcade.draw_circle_filled((100 * grid_counter) + 50, (100 * row_counter) + 80, 5, arcade.color.RED)
-                        print("Leather flash")
                 elif col >= 3:
                     arcade.draw_texture_rectangle((100 * grid_counter) + 50, (100 * row_counter) + 50, 100, 100, arcade.load_texture('.\\assets\\leather.png'))
                     grid[grid_counter][row_counter] += 1
@@ -308,7 +304,6 @@ def board_action(x, y):
 
 
 def on_key_press(key, modifiers):
-    print("KEY PRESS")
     global current_screen
 
     if current_screen == 1:
@@ -320,11 +315,10 @@ def on_key_press(key, modifiers):
 
 
 def on_key_release(key, modifiers):
-    print("KEY RELEASE!")
+    pass
 
 
 def on_mouse_press(x, y, button, modifiers):
-    print("MOUSE PRESS!")
     global mouse_select
     global selected
     global current_screen
@@ -340,6 +334,9 @@ def on_mouse_press(x, y, button, modifiers):
 
     elif current_screen == 2:
         if mouse_hover(x, y, [100, HEIGHT - 100, 100, 100]):
+            if mouse_select == 1:
+                mouse_select = 0
+            else:
                 mouse_select = 1
         elif mouse_hover(x, y, [200, HEIGHT - 100, 100, 100]):
             if mouse_select == 2:
@@ -397,4 +394,3 @@ def draw_instructions(instructions):
 
 if __name__ == '__main__':
     setup()
-    
