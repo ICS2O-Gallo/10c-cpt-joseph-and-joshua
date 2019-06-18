@@ -248,7 +248,7 @@ def on_draw():
                     arcade.draw_texture_rectangle(
                         (100 * grid_counter) + 50, (100 * row_counter) + 50, 100, 100,
                         arcade.load_texture('.\\assets\\gold.png'))
-                    if random.randint(0, 45) == 1:
+                    if random.randint(0, 70) == 1:
                         fabric_sprites.append(
                             Fabric((100 * grid_counter) + 50, (100 * row_counter) + 50))
                 elif col >= 35:
